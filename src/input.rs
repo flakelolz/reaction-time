@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 
-use crate::{AppState, Scores};
+use crate::score::Scores;
+use crate::AppState;
 
 pub struct InputPlugin;
 
