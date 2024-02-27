@@ -1,6 +1,7 @@
 use crate::Scores;
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContexts, EguiPlugin};
+use rand::Rng;
 
 pub struct InterfacePlugin;
 
@@ -17,8 +18,9 @@ pub fn ui_system(mut contexts: EguiContexts, mut times: ResMut<Scores>) {
                 times.reset();
             }
 
+            let rng = rand::thread_rng().gen_range(0..100);
             let count = times.counter;
-            times.reactions[count] = Some(std::time::Duration::from_millis(100));
+            times.reactions[count] = Some(std::time::Duration::from_millis(200 + rng as u64));
             times.counter += 1;
         }
 
@@ -26,19 +28,17 @@ pub fn ui_system(mut contexts: EguiContexts, mut times: ResMut<Scores>) {
             if let Some(time) = time {
                 ui.label(format!("{}: {:?}", i + 1, time));
             } else {
-                ui.label(format!("{}: None", i + 1));
+                ui.label(format!("{}: ...", i + 1));
             }
         }
-    });
 
-    egui::Window::new("Actions").show(contexts.ctx_mut(), |ui| {
-        if ui.button("Size of 5").clicked() {
-            times.size = 5;
-            times.reset();
+        if let Some(average) = times.average() {
+            ui.label(format!("Average: {:?}", average));
+        } else {
+            ui.label("Average: Calculating...");
         }
 
-        if ui.button("Size of 10").clicked() {
-            times.size = 10;
+        if ui.button("Reset").clicked() {
             times.reset();
         }
     });
