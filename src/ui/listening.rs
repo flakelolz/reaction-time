@@ -22,30 +22,28 @@ impl Plugin for ListeningPlugin {
 struct ListeningUI;
 
 fn setup_listening_ui(mut commands: Commands) {
-    let container = (
-        NodeBundle {
-            style: Style {
-                display: Display::Flex,
-                flex_direction: FlexDirection::Column,
-                position_type: PositionType::Absolute,
-                justify_content: JustifyContent::Center,
-                align_items: AlignItems::Center,
-                width: Val::Percent(100.),
-                height: Val::Percent(100.),
+    let container = NodeBundle {
+        style: Style {
+            display: Display::Flex,
+            justify_content: JustifyContent::Center,
+            align_items: AlignItems::Center,
+            width: Val::Percent(100.),
+            height: Val::Percent(100.),
+            ..default()
+        },
+        ..default()
+    };
+
+    let click = (
+        TextBundle::from_section(
+            "Click!",
+            TextStyle {
+                font_size: 110.,
+                color: Color::WHITE,
                 ..default()
             },
-            ..default()
-        },
+        ),
         ListeningUI,
-    );
-
-    let click = TextBundle::from_section(
-        "Click!",
-        TextStyle {
-            font_size: 110.,
-            color: Color::WHITE,
-            ..default()
-        },
     );
 
     let child = commands.spawn(click).id();

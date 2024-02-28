@@ -39,10 +39,8 @@ fn setup_countdown_ui(mut commands: Commands) {
     let container = NodeBundle {
         style: Style {
             display: Display::Flex,
-            flex_direction: FlexDirection::Column,
-            position_type: PositionType::Absolute,
-            justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
+            justify_content: JustifyContent::Center,
             width: Val::Percent(100.),
             height: Val::Percent(100.),
             ..default()
@@ -54,17 +52,11 @@ fn setup_countdown_ui(mut commands: Commands) {
         TextBundle::from_section(
             "Countdown",
             TextStyle {
-                // font: asset_server.load("fonts/04B_19__.ttf"),
                 font_size: 150.,
                 color: Color::WHITE,
                 ..default()
             },
-        )
-        .with_style(Style {
-            display: Display::None,
-            position_type: PositionType::Absolute,
-            ..default()
-        }),
+        ),
         CountdownUI,
     );
 

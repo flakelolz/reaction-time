@@ -26,7 +26,6 @@ fn setup_instructions_ui(mut commands: Commands) {
         style: Style {
             display: Display::Flex,
             flex_direction: FlexDirection::Column,
-            // position_type: PositionType::Absolute,
             justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
             width: Val::Percent(100.),
