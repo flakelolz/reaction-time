@@ -1,8 +1,10 @@
 * TODO
   - (x) average function
   - (x) Count down
-  - ( ) Initial instructions
+  - (x) Initial instructions
+  - (x) Show reaction times
   - ( ) Game loop
+  - ( ) Make egui only compile and work on debug mode
 
 
 
