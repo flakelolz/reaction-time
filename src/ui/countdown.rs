@@ -6,7 +6,7 @@ pub struct CountdownPlugin;
 
 impl Plugin for CountdownPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(TimeKeeper::new(3.0))
+        app.insert_resource(TimeKeeper::new(1.5))
             .add_systems(Startup, setup_countdown_ui)
             .add_systems(
                 Update,
@@ -33,11 +33,13 @@ impl TimeKeeper {
 }
 
 #[derive(Component)]
-struct CountdownUi;
+struct CountdownUI;
 
 fn setup_countdown_ui(mut commands: Commands) {
     let container = NodeBundle {
         style: Style {
+            display: Display::Flex,
+            flex_direction: FlexDirection::Column,
             position_type: PositionType::Absolute,
             justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
@@ -63,7 +65,7 @@ fn setup_countdown_ui(mut commands: Commands) {
             position_type: PositionType::Absolute,
             ..default()
         }),
-        CountdownUi,
+        CountdownUI,
     );
 
     let parent = commands.spawn(container).id();
@@ -73,21 +75,21 @@ fn setup_countdown_ui(mut commands: Commands) {
 
 // Shows and ticks the countdown while on ReactionState::Countdown state
 fn show_countdown(
-    mut text_query: Query<(&mut Text, &mut Style), With<CountdownUi>>,
+    mut text_query: Query<(&mut Text, &mut Style), With<CountdownUI>>,
     mut timer: ResMut<TimeKeeper>,
     time: Res<Time>,
 ) {
     timer.countdown.tick(time.delta());
 
     for (mut text, mut style) in text_query.iter_mut() {
-        style.display = Display::default();
+        style.display = Display::Flex;
         text.sections[0].value = format!("{:.2}", timer.countdown.remaining_secs());
     }
 }
 
 // Hides and resets the countdown on any other state
 fn hide_countdown(
-    mut text_query: Query<&mut Style, With<CountdownUi>>,
+    mut text_query: Query<&mut Style, With<CountdownUI>>,
     mut timer: ResMut<TimeKeeper>,
 ) {
     timer.countdown.reset();
