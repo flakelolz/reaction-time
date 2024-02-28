@@ -73,7 +73,7 @@ fn show_countdown(
 ) {
     timer.countdown.tick(time.delta());
 
-    for (mut text, mut style) in text_query.iter_mut() {
+    for (mut text, mut style) in &mut text_query {
         style.display = Display::Flex;
         text.sections[0].value = format!("{:.2}", timer.countdown.remaining_secs());
     }
@@ -86,7 +86,7 @@ fn hide_countdown(
 ) {
     timer.countdown.reset();
 
-    for mut style in text_query.iter_mut() {
+    for mut style in &mut text_query {
         style.display = Display::None;
     }
 }
