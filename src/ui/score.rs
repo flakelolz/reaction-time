@@ -43,3 +43,18 @@ impl Scores {
         self.reactions = vec![None; self.size];
     }
 }
+
+impl std::fmt::Display for Scores {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "1:   {:?}\n2:   {:?}\n3:   {:?}\n4:   {:?}\n5:   {:?}\n\nAvg: {:.0?}\n",
+            self.reactions[0].unwrap_or_default(),
+            self.reactions[1].unwrap_or_default(),
+            self.reactions[2].unwrap_or_default(),
+            self.reactions[3].unwrap_or_default(),
+            self.reactions[4].unwrap_or_default(),
+            self.average().unwrap_or_default()
+        )
+    }
+}
