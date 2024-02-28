@@ -3,7 +3,7 @@
   - (x) Count down
   - (x) Initial instructions
   - (x) Show reaction times
-  - ( ) Game loop
+  - (x) Game loop
   - ( ) Make egui only compile and work on debug mode
 
 

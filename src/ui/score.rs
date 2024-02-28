@@ -42,13 +42,18 @@ impl Scores {
         self.counter = 0;
         self.reactions = vec![None; self.size];
     }
+
+    pub fn add(&mut self, reaction: Duration) {
+        self.reactions[self.counter] = Some(reaction);
+        self.counter += 1;
+    }
 }
 
 impl std::fmt::Display for Scores {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "1:   {:?}\n2:   {:?}\n3:   {:?}\n4:   {:?}\n5:   {:?}\n\nAvg: {:.0?}\n",
+            "1:   {:.0?}\n2:   {:.0?}\n3:   {:.0?}\n4:   {:.0?}\n5:   {:.0?}\n\nAvg: {:.0?}\n",
             self.reactions[0].unwrap_or_default(),
             self.reactions[1].unwrap_or_default(),
             self.reactions[2].unwrap_or_default(),

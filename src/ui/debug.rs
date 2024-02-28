@@ -61,7 +61,7 @@ fn change_state(
 ) {
     egui::Window::new("Debug")
         .anchor(Align2::LEFT_BOTTOM, (0., -10.))
-        .default_open(false)
+        .default_open(true)
         .show(contexts.ctx_mut(), |ui| {
             ui.label("App States");
             ui.horizontal(|ui| {

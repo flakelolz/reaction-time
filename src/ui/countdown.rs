@@ -1,12 +1,12 @@
 use bevy::prelude::*;
 
-use crate::reaction::ReactionState;
+use crate::{fsm::TimeKeeper, reaction::ReactionState};
 
 pub struct CountdownPlugin;
 
 impl Plugin for CountdownPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(TimeKeeper::new(1.5))
+        app
             .add_systems(Startup, setup_countdown_ui)
             .add_systems(
                 Update,
@@ -16,19 +16,6 @@ impl Plugin for CountdownPlugin {
                 Update,
                 hide_countdown.run_if(not(in_state(ReactionState::Countdown))),
             );
-    }
-}
-
-#[derive(Resource, Default)]
-struct TimeKeeper {
-    countdown: Timer,
-}
-
-impl TimeKeeper {
-    fn new(seconds: f32) -> Self {
-        Self {
-            countdown: Timer::from_seconds(seconds, TimerMode::Once),
-        }
     }
 }
 

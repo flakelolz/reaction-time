@@ -6,7 +6,7 @@ use crate::AppState;
 pub struct InputPlugin;
 
 #[derive(Event)]
-enum InputEvent {
+pub enum InputEvent {
     Click,
     Restart,
 }
