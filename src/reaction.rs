@@ -16,7 +16,7 @@ impl Plugin for ReactionPlugin {
 pub enum ReactionState {
     #[default]
     Idle,
-    Count,
+    Countdown,
     Misinput,
     Listening,
     Restart,
@@ -44,11 +44,11 @@ fn square_color(mut square: Query<&mut Sprite, With<Square>>, state: Res<State<R
     let state = state.as_ref().get();
     for mut sprite in &mut square {
         sprite.color = match state {
-            ReactionState::Idle => Color::BLACK,
-            ReactionState::Count => Color::RED,
-            ReactionState::Misinput => Color::ALICE_BLUE,
-            ReactionState::Listening => Color::GREEN,
-            ReactionState::Restart => Color::BLUE,
+            ReactionState::Idle => Color::rgb_u8(43, 135, 209),
+            ReactionState::Countdown => Color::rgb_u8(206, 38, 54),
+            ReactionState::Misinput => Color::rgb_u8(43, 135, 209),
+            ReactionState::Listening => Color::rgb_u8(75, 219, 106),
+            ReactionState::Restart => Color::BLACK,
         }
     }
 }

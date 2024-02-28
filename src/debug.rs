@@ -44,10 +44,10 @@ fn change_state(
             }
 
             if ui
-                .selectable_label(*curr_reaction.get() == ReactionState::Count, "Count")
+                .selectable_label(*curr_reaction.get() == ReactionState::Countdown, "Countdown")
                 .clicked()
             {
-                next_reaction.set(ReactionState::Count);
+                next_reaction.set(ReactionState::Countdown);
             }
 
             if ui

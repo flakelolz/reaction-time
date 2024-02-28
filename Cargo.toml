@@ -13,7 +13,7 @@ rand = "0.8.5"
 [dependencies.bevy]
 version = "0.13.0"
 # Disable the default features if there are any that you do not want
-default-features = false
+default-features = true
 features = [
   # These are the default features:
   # (re-enable whichever you like)
