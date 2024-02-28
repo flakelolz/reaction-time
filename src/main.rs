@@ -2,9 +2,6 @@ use bevy::prelude::*;
 
 mod input;
 mod reaction;
-mod score;
-mod countdown;
-mod debug;
 mod ui;
 
 fn main() {
@@ -18,12 +15,12 @@ fn main() {
             ..Default::default()
         }))
         .init_state::<AppState>()
-        .add_plugins(debug::DebugPlugin)
-        .add_plugins(score::InterfacePlugin)
-        .add_plugins(input::InputPlugin)
+        .add_plugins(ui::debug::DebugPlugin)
         .add_plugins(reaction::ReactionPlugin)
+        .add_plugins(input::InputPlugin)
+        .add_plugins(ui::score::InterfacePlugin)
         .add_plugins(ui::instructions::InstructionsPlugin)
-        .add_plugins(countdown::CountdownPlugin)
+        .add_plugins(ui::countdown::CountdownPlugin)
         .add_systems(Startup, setup)
         .run();
 }
