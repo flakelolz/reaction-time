@@ -3,6 +3,7 @@ use bevy::{prelude::*, time::Stopwatch};
 mod input;
 mod reaction;
 mod score;
+mod debug;
 
 fn main() {
     App::new()
@@ -15,6 +16,7 @@ fn main() {
             ..Default::default()
         }))
         .init_state::<AppState>()
+        .add_plugins(debug::DebugPlugin)
         .add_plugins(score::InterfacePlugin)
         .add_plugins(input::InputPlugin)
         .add_plugins(reaction::ReactionPlugin)

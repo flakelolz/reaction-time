@@ -13,7 +13,7 @@ impl Plugin for ReactionPlugin {
 
 #[allow(unused)]
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
-enum ReactionState {
+pub enum ReactionState {
     #[default]
     Idle,
     Count,
