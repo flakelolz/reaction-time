@@ -22,6 +22,7 @@ fn main() {
         .add_plugins(ui::instructions::InstructionsPlugin)
         .add_plugins(ui::countdown::CountdownPlugin)
         .add_plugins(ui::listening::ListeningPlugin)
+        .add_plugins(ui::misinput::MisinputPlugin)
         .add_systems(Startup, setup)
         .run();
 }
