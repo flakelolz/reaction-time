@@ -1,8 +1,9 @@
-use bevy::{prelude::*, time::Stopwatch};
+use bevy::prelude::*;
 
 mod input;
 mod reaction;
 mod score;
+mod countdown;
 mod debug;
 
 fn main() {
@@ -20,6 +21,7 @@ fn main() {
         .add_plugins(score::InterfacePlugin)
         .add_plugins(input::InputPlugin)
         .add_plugins(reaction::ReactionPlugin)
+        .add_plugins(countdown::CountdownPlugin)
         .add_systems(Startup, setup)
         .run();
 }
@@ -32,20 +34,6 @@ enum AppState {
     Result,
 }
 
-#[derive(Resource)]
-struct TimeTracking {
-    countdown: Stopwatch,
-    reaction_time: Timer,
-}
-
-impl TimeTracking {
-    fn new() -> Self {
-        Self {
-            countdown: Stopwatch::new(),
-            reaction_time: Timer::from_seconds(1.0, TimerMode::Once),
-        }
-    }
-}
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
