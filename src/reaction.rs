@@ -5,7 +5,7 @@ pub struct ReactionPlugin;
 impl Plugin for ReactionPlugin {
     fn build(&self, app: &mut App) {
         app.init_state::<ReactionState>()
-            .add_systems(Startup, spawn_square)
+            .add_systems(Startup, setup_colors)
             .add_systems(Update, square_color)
             .add_systems(Update, square_size);
     }
@@ -23,9 +23,9 @@ pub enum ReactionState {
 }
 
 #[derive(Component)]
-pub struct Square;
+pub struct ReactionColor;
 
-fn spawn_square(mut commands: Commands, window: Query<&Window>) {
+fn setup_colors(mut commands: Commands, window: Query<&Window>) {
     let window = window.single();
     commands.spawn((
         SpriteBundle {
@@ -36,11 +36,14 @@ fn spawn_square(mut commands: Commands, window: Query<&Window>) {
             },
             ..Default::default()
         },
-        Square,
+        ReactionColor,
     ));
 }
 
-fn square_color(mut square: Query<&mut Sprite, With<Square>>, state: Res<State<ReactionState>>) {
+fn square_color(
+    mut square: Query<&mut Sprite, With<ReactionColor>>,
+    state: Res<State<ReactionState>>,
+) {
     let state = state.as_ref().get();
     for mut sprite in &mut square {
         sprite.color = match state {
@@ -53,7 +56,7 @@ fn square_color(mut square: Query<&mut Sprite, With<Square>>, state: Res<State<R
     }
 }
 
-fn square_size(mut square: Query<&mut Sprite, With<Square>>, window: Query<&Window>) {
+fn square_size(mut square: Query<&mut Sprite, With<ReactionColor>>, window: Query<&Window>) {
     let window = window.single();
 
     for mut sprite in &mut square {

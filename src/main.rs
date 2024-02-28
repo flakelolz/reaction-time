@@ -5,6 +5,7 @@ mod reaction;
 mod score;
 mod countdown;
 mod debug;
+mod ui;
 
 fn main() {
     App::new()
@@ -21,6 +22,7 @@ fn main() {
         .add_plugins(score::InterfacePlugin)
         .add_plugins(input::InputPlugin)
         .add_plugins(reaction::ReactionPlugin)
+        .add_plugins(ui::instructions::InstructionsPlugin)
         .add_plugins(countdown::CountdownPlugin)
         .add_systems(Startup, setup)
         .run();
