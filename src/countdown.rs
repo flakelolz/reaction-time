@@ -35,7 +35,7 @@ impl TimeKeeper {
 #[derive(Component)]
 struct CountdownUi;
 
-fn setup_countdown_ui(mut commands: Commands, timer: Res<TimeKeeper>) {
+fn setup_countdown_ui(mut commands: Commands) {
     let container = NodeBundle {
         style: Style {
             position_type: PositionType::Absolute,
@@ -50,7 +50,7 @@ fn setup_countdown_ui(mut commands: Commands, timer: Res<TimeKeeper>) {
 
     let count = (
         TextBundle::from_section(
-            format!("{:.2}", timer.countdown.remaining_secs()),
+            "Countdown",
             TextStyle {
                 // font: asset_server.load("fonts/04B_19__.ttf"),
                 font_size: 150.,
