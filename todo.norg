@@ -4,6 +4,8 @@
   - (x) Initial instructions
   - (x) Show reaction times
   - (x) Game loop
+  - ( ) Restart game with Escape key
+  - ( ) Different font
   - ( ) Make egui only compile and work on debug mode
 
 

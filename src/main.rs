@@ -1,3 +1,4 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use bevy::prelude::*;
 
 mod fsm;
@@ -16,7 +17,6 @@ fn main() {
             ..Default::default()
         }))
         .init_state::<AppState>()
-        .add_plugins(ui::debug::DebugPlugin)
         .add_plugins(reaction::ReactionPlugin)
         .add_plugins(input::InputPlugin)
         .add_plugins(ui::score::InterfacePlugin)
@@ -28,6 +28,7 @@ fn main() {
         .add_plugins(ui::finished::FinishedPlugin)
         .add_plugins(fsm::StateMachinePlugin)
         .add_systems(Startup, setup)
+        .add_plugins(ui::debug::DebugPlugin)
         .run();
 }
 
