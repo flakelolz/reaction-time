@@ -63,6 +63,7 @@ fn setup_result_ui(mut commands: Commands) {
 
     let result = commands.spawn(result).id();
     let click = commands.spawn(click).id();
+
     commands
         .spawn(container)
         .push_children(&[result, click]);

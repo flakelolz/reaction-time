@@ -31,7 +31,7 @@ fn setup_countdown_ui(mut commands: Commands) {
         ..default()
     };
 
-    let count = (
+    let counter = (
         TextBundle::from_section(
             "Countdown",
             TextStyle {
@@ -43,9 +43,8 @@ fn setup_countdown_ui(mut commands: Commands) {
         CountdownUI,
     );
 
-    let parent = commands.spawn(container).id();
-    let child = commands.spawn(count).id();
-    commands.entity(parent).push_children(&[child]);
+    let counter = commands.spawn(counter).id();
+    commands.spawn(container).push_children(&[counter]);
 }
 
 // Shows and ticks the countdown while on ReactionState::Countdown state

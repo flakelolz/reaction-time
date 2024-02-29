@@ -7,10 +7,7 @@ pub struct InstructionsPlugin;
 impl Plugin for InstructionsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_instructions_ui)
-            .add_systems(
-                Update,
-                show_instructions.run_if(in_state(AppState::Idle)),
-            )
+            .add_systems(Update, show_instructions.run_if(in_state(AppState::Idle)))
             .add_systems(
                 Update,
                 hide_instructions.run_if(not(in_state(AppState::Idle))),
@@ -70,17 +67,23 @@ fn setup_instructions_ui(mut commands: Commands) {
     );
 
     let spacer = (
-        TextBundle::from_section(" ", TextStyle { font_size: 40., ..default() }),
+        TextBundle::from_section(
+            " ",
+            TextStyle {
+                font_size: 40.,
+                ..default()
+            },
+        ),
         InstructionsUI,
     );
 
-    let parent = commands.spawn(container).id();
-    let child1 = commands.spawn(instructions).id();
-    let child2 = commands.spawn(any_key).id();
-    let space = commands.spawn(spacer).id();
+    let instruction = commands.spawn(instructions).id();
+    let any_key = commands.spawn(any_key).id();
+    let spacer = commands.spawn(spacer).id();
+
     commands
-        .entity(parent)
-        .push_children(&[child1, space, child2]);
+        .spawn(container)
+        .push_children(&[instruction, spacer, any_key]);
 }
 
 fn show_instructions(mut instructions: Query<&mut Style, With<InstructionsUI>>) {

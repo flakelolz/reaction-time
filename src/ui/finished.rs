@@ -77,12 +77,13 @@ fn setup_restart_ui(mut commands: Commands) {
         RestartUI,
     );
 
-    let child1 = commands.spawn(results).id();
-    let child2 = commands.spawn(click).id();
-    let space = commands.spawn(spacer).id();
+    let results = commands.spawn(results).id();
+    let click = commands.spawn(click).id();
+    let spacer = commands.spawn(spacer).id();
+
     commands
         .spawn(container)
-        .push_children(&[child1, space, child2]);
+        .push_children(&[results, spacer, click]);
 }
 
 fn show_results(mut query: Query<&mut Text, With<ResultUI>>, scores: Res<Scores>) {
