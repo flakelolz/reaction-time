@@ -7,6 +7,7 @@ edition = "2021"
 
 [lints.clippy]
 too_many_arguments = "allow"
+type_complexity = "allow"
 
 [dependencies]
 bevy_egui = "0.25.0"
