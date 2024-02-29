@@ -5,4 +5,5 @@ pub mod countdown;
 pub mod misinput;
 pub mod listening;
 pub mod finished;
+pub mod result;
 

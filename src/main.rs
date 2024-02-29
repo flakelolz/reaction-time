@@ -24,6 +24,7 @@ fn main() {
         .add_plugins(ui::countdown::CountdownPlugin)
         .add_plugins(ui::listening::ListeningPlugin)
         .add_plugins(ui::misinput::MisinputPlugin)
+        .add_plugins(ui::result::ResultPlugin)
         .add_plugins(ui::finished::FinishedPlugin)
         .add_plugins(fsm::StateMachinePlugin)
         .add_systems(Startup, setup)
