@@ -44,7 +44,7 @@ fn setup_restart_ui(mut commands: Commands) {
         TextBundle::from_section(
             "Reaction Times",
             TextStyle {
-                font_size: 40.,
+                font_size: 50.,
                 color: Color::WHITE,
                 ..default()
             },
@@ -57,7 +57,7 @@ fn setup_restart_ui(mut commands: Commands) {
         TextBundle::from_section(
             "Click to Restart...",
             TextStyle {
-                font_size: 25.,
+                font_size: 30.,
                 color: Color::WHITE,
                 ..default()
             },
@@ -69,7 +69,7 @@ fn setup_restart_ui(mut commands: Commands) {
         TextBundle::from_section(
             " ",
             TextStyle {
-                font_size: 30.,
+                font_size: 40.,
                 color: Color::WHITE,
                 ..default()
             },

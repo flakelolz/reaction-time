@@ -53,7 +53,7 @@ fn setup_instructions_ui(mut commands: Commands) {
         TextBundle::from_section(
             "Click to play...",
             TextStyle {
-                font_size: 25.,
+                font_size: 30.,
                 color: Color::WHITE,
                 ..default()
             },
