@@ -55,7 +55,7 @@ fn setup_restart_ui(mut commands: Commands) {
 
     let click = (
         TextBundle::from_section(
-            "Press any Key to Restart...",
+            "Click to Restart...",
             TextStyle {
                 font_size: 25.,
                 color: Color::WHITE,

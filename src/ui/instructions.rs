@@ -51,7 +51,7 @@ fn setup_instructions_ui(mut commands: Commands) {
 
     let any_key = (
         TextBundle::from_section(
-            "Press any Key to play...",
+            "Click to play...",
             TextStyle {
                 font_size: 25.,
                 color: Color::WHITE,
