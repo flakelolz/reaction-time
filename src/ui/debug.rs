@@ -15,28 +15,23 @@ impl Plugin for DebugPlugin {
     fn build(&self, app: &mut App) {
         #[cfg(debug_assertions)]
         app.add_plugins(EguiPlugin)
-            .add_systems(Update, show_reactions)
-            .add_systems(Update, change_state);
+            .add_systems(Update, debug_window);
     }
 }
 
-pub fn show_reactions(mut contexts: EguiContexts, mut times: ResMut<Scores>) {
-    egui::Window::new("Reaction Time")
-        .anchor(Align2::LEFT_TOP, (0., 10.))
-        .default_open(false)
+fn debug_window(
+    mut score: ResMut<Scores>,
+    mut contexts: EguiContexts,
+    mut next_state: ResMut<NextState<AppState>>,
+    state: Res<State<AppState>>,
+) {
+    egui::Window::new("Debug")
+        .anchor(Align2::LEFT_TOP, (0., -10.))
+        .default_open(true)
         .show(contexts.ctx_mut(), |ui| {
-            if ui.button("Add").clicked() {
-                if times.counter == times.size {
-                    times.reset();
-                }
-
-                let rng = rand::thread_rng().gen_range(0..100);
-                let count = times.counter;
-                times.reactions[count] = Some(std::time::Duration::from_millis(200 + rng as u64));
-                times.counter += 1;
-            }
-
-            for (i, time) in times.reactions.iter().enumerate() {
+            // Reaction Times
+            ui.heading("Times");
+            for (i, time) in score.reactions.iter().enumerate() {
                 if let Some(time) = time {
                     ui.label(format!("[#{}]: {:?}", i + 1, time));
                 } else {
@@ -44,78 +39,74 @@ pub fn show_reactions(mut contexts: EguiContexts, mut times: ResMut<Scores>) {
                 }
             }
 
-            if let Some(average) = times.average() {
+            if let Some(average) = score.average() {
                 ui.label(format!("Avg: {:?}", average));
             } else {
                 ui.label("Avg: Calculating...");
             }
 
-            if ui.button("Reset").clicked() {
-                times.reset();
-            }
-        });
-}
+            ui.horizontal(|ui| {
+                if ui.button("Add").clicked() {
+                    if score.counter == score.size {
+                        score.reset();
+                    }
 
-fn change_state(
-    mut contexts: EguiContexts,
-    mut next_reaction: ResMut<NextState<AppState>>,
-    curr_reaction: Res<State<AppState>>,
-) {
-    egui::Window::new("Debug")
-        .anchor(Align2::LEFT_BOTTOM, (0., -10.))
-        .default_open(true)
-        .show(contexts.ctx_mut(), |ui| {
-            ui.label("Reaction State: ");
+                    let rng = rand::thread_rng().gen_range(0..100);
+                    let count = score.counter;
+                    score.reactions[count] =
+                        Some(std::time::Duration::from_millis(200 + rng as u64));
+                    score.counter += 1;
+                }
+
+                if ui.button("Reset").clicked() {
+                    score.reset();
+                    next_state.set(AppState::Idle);
+                }
+            });
+
+            // App State
+            ui.heading("States");
             ui.vertical(|ui| {
                 if ui
-                    .selectable_label(*curr_reaction.get() == AppState::Idle, "Idle")
+                    .selectable_label(*state.get() == AppState::Idle, "Idle")
                     .clicked()
                 {
-                    next_reaction.set(AppState::Idle);
+                    next_state.set(AppState::Idle);
                 }
 
                 if ui
-                    .selectable_label(
-                        *curr_reaction.get() == AppState::Countdown,
-                        "Countdown",
-                    )
+                    .selectable_label(*state.get() == AppState::Countdown, "Countdown")
                     .clicked()
                 {
-                    next_reaction.set(AppState::Countdown);
+                    next_state.set(AppState::Countdown);
                 }
 
                 if ui
-                    .selectable_label(*curr_reaction.get() == AppState::Misinput, "Misinput")
+                    .selectable_label(*state.get() == AppState::Misinput, "Misinput")
                     .clicked()
                 {
-                    next_reaction.set(AppState::Misinput);
+                    next_state.set(AppState::Misinput);
                 }
 
                 if ui
-                    .selectable_label(
-                        *curr_reaction.get() == AppState::Listening,
-                        "Listening",
-                    )
+                    .selectable_label(*state.get() == AppState::Listening, "Listening")
                     .clicked()
                 {
-                    next_reaction.set(AppState::Listening);
+                    next_state.set(AppState::Listening);
                 }
 
                 if ui
-                    .selectable_label(
-                        *curr_reaction.get() == AppState::Result,
-                        "Result",
-                    )
+                    .selectable_label(*state.get() == AppState::Result, "Result")
                     .clicked()
                 {
-                    next_reaction.set(AppState::Result);
+                    next_state.set(AppState::Result);
                 }
 
                 if ui
-                    .selectable_label(*curr_reaction.get() == AppState::Finished, "Finished")
+                    .selectable_label(*state.get() == AppState::Finished, "Finished")
                     .clicked()
                 {
-                    next_reaction.set(AppState::Finished);
+                    next_state.set(AppState::Finished);
                 }
             })
         });
