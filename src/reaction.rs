@@ -1,25 +1,15 @@
 use bevy::prelude::*;
 
+use crate::AppState;
+
 pub struct ReactionPlugin;
 
 impl Plugin for ReactionPlugin {
     fn build(&self, app: &mut App) {
-        app.init_state::<AppState>()
-            .add_systems(Startup, setup_colors)
+        app.add_systems(Startup, setup_colors)
             .add_systems(Update, square_color)
             .add_systems(Update, square_size);
     }
-}
-
-#[allow(unused)]
-#[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
-pub enum AppState {
-    #[default]
-    Idle,
-    Countdown,
-    Misinput,
-    Listening,
-    Results,
 }
 
 #[derive(Component)]
@@ -40,10 +30,7 @@ fn setup_colors(mut commands: Commands, window: Query<&Window>) {
     ));
 }
 
-fn square_color(
-    mut square: Query<&mut Sprite, With<ReactionColor>>,
-    state: Res<State<AppState>>,
-) {
+fn square_color(mut square: Query<&mut Sprite, With<ReactionColor>>, state: Res<State<AppState>>) {
     let state = state.as_ref().get();
     for mut sprite in &mut square {
         sprite.color = match state {
@@ -51,7 +38,8 @@ fn square_color(
             AppState::Countdown => Color::rgb_u8(206, 38, 54),
             AppState::Misinput => Color::rgb_u8(43, 135, 209),
             AppState::Listening => Color::rgb_u8(75, 219, 106),
-            AppState::Results => Color::BLACK,
+            AppState::Result => Color::rgb_u8(75, 219, 106),
+            AppState::Finished => Color::BLACK,
         }
     }
 }

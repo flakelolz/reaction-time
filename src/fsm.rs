@@ -1,7 +1,7 @@
 use bevy::{prelude::*, time::Stopwatch};
 use rand::Rng;
 
-use crate::{input::InputEvent, reaction::AppState, ui::score::Scores};
+use crate::{input::InputEvent, ui::score::Scores, AppState};
 
 pub struct StateMachinePlugin;
 
@@ -82,23 +82,26 @@ fn app_logic(
         AppState::Listening => {
             // Start tracking reaction time
             timers.reaction.tick(time.delta());
+
             // When clicked, add reaction time to scores
             if let Some(InputEvent::Click) = inputs.read().last() {
                 scores.add(timers.reaction.elapsed());
-            }
 
-            // When the reaction Vec is filled, show the results
-            if scores.counter == scores.size {
-                next_state.set(AppState::Results);
-            }
-
-            // wait the transition time to go back to countdown
-            if timers.transition.tick(time.delta()).finished() {
-                timers.transition.reset();
-                next_state.set(AppState::Countdown);
+                // Show the current reaction time
+                next_state.set(AppState::Result);
             }
         }
-        AppState::Results => {
+        AppState::Result => {
+            if let Some(InputEvent::Click) = inputs.read().last() {
+                // if the reaction Vec is filled, show the finished state
+                if scores.counter == scores.size {
+                    next_state.set(AppState::Finished);
+                } else {
+                    next_state.set(AppState::Countdown);
+                }
+            }
+        }
+        AppState::Finished => {
             if let Some(InputEvent::Click) = inputs.read().last() {
                 scores.reset();
                 timers.reset();

@@ -4,7 +4,7 @@ use bevy_egui::{
     EguiContexts, EguiPlugin,
 };
 
-use crate::reaction::AppState;
+use crate::AppState;
 use rand::Rng;
 
 use super::score::Scores;
@@ -101,10 +101,20 @@ fn change_state(
                 }
 
                 if ui
-                    .selectable_label(*curr_reaction.get() == AppState::Results, "Restart")
+                    .selectable_label(
+                        *curr_reaction.get() == AppState::Result,
+                        "Result",
+                    )
                     .clicked()
                 {
-                    next_reaction.set(AppState::Results);
+                    next_reaction.set(AppState::Result);
+                }
+
+                if ui
+                    .selectable_label(*curr_reaction.get() == AppState::Finished, "Finished")
+                    .clicked()
+                {
+                    next_reaction.set(AppState::Finished);
                 }
             })
         });

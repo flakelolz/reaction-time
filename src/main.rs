@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
+mod fsm;
 mod input;
 mod reaction;
 mod ui;
-mod fsm;
 
 fn main() {
     App::new()
@@ -15,6 +15,7 @@ fn main() {
             }),
             ..Default::default()
         }))
+        .init_state::<AppState>()
         .add_plugins(ui::debug::DebugPlugin)
         .add_plugins(reaction::ReactionPlugin)
         .add_plugins(input::InputPlugin)
@@ -23,10 +24,22 @@ fn main() {
         .add_plugins(ui::countdown::CountdownPlugin)
         .add_plugins(ui::listening::ListeningPlugin)
         .add_plugins(ui::misinput::MisinputPlugin)
-        .add_plugins(ui::results::RestartPlugin)
+        .add_plugins(ui::finished::FinishedPlugin)
         .add_plugins(fsm::StateMachinePlugin)
         .add_systems(Startup, setup)
         .run();
+}
+
+#[allow(unused)]
+#[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
+pub enum AppState {
+    #[default]
+    Idle,
+    Countdown,
+    Misinput,
+    Listening,
+    Result,
+    Finished,
 }
 
 fn setup(mut commands: Commands) {

@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::reaction::AppState;
+use crate::AppState;
 
 pub struct InstructionsPlugin;
 

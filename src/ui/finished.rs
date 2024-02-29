@@ -1,21 +1,21 @@
 use bevy::prelude::*;
 
-use crate::reaction::AppState;
+use crate::AppState;
 
 use super::score::Scores;
 
-pub struct RestartPlugin;
+pub struct FinishedPlugin;
 
-impl Plugin for RestartPlugin {
+impl Plugin for FinishedPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_restart_ui)
             .add_systems(
                 Update,
-                (show_restart_ui, show_results).run_if(in_state(AppState::Results)),
+                (show_restart_ui, show_results).run_if(in_state(AppState::Finished)),
             )
             .add_systems(
                 Update,
-                hide_restart_ui.run_if(not(in_state(AppState::Results))),
+                hide_restart_ui.run_if(not(in_state(AppState::Finished))),
             );
     }
 }

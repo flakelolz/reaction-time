@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::reaction::AppState;
+use crate::AppState;
 
 pub struct ListeningPlugin;
 
@@ -61,3 +61,4 @@ fn hide_listening_ui(mut query: Query<&mut Style, With<ListeningUI>>) {
         style.display = Display::None;
     }
 }
+
