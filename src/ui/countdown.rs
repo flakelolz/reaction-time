@@ -57,7 +57,7 @@ fn show_countdown(
 
     for (mut text, mut style) in &mut text_query {
         style.display = Display::Flex;
-        text.sections[0].value = format!("{:.2}", timer.countdown.remaining_secs());
+        text.sections[0].value = format!("{:.1}", timer.countdown.remaining_secs());
     }
 }
 

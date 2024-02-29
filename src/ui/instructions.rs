@@ -77,13 +77,31 @@ fn setup_instructions_ui(mut commands: Commands) {
         InstructionsUI,
     );
 
+    let reset = (
+        TextBundle::from_section(
+            "Press ESC to Reset",
+            TextStyle {
+                font_size: 20.,
+                color: Color::WHITE,
+                ..default()
+            },
+        )
+        .with_style(Style {
+            position_type: PositionType::Absolute,
+            bottom: Val::Percent(10.),
+            ..default()
+        }),
+        InstructionsUI,
+    );
+
     let instruction = commands.spawn(instructions).id();
     let any_key = commands.spawn(any_key).id();
     let spacer = commands.spawn(spacer).id();
+    let reset = commands.spawn(reset).id();
 
     commands
         .spawn(container)
-        .push_children(&[instruction, spacer, any_key]);
+        .push_children(&[instruction, spacer, any_key, reset]);
 }
 
 fn show_instructions(mut instructions: Query<&mut Style, With<InstructionsUI>>) {

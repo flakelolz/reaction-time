@@ -1,11 +1,12 @@
 use bevy::prelude::*;
 
+use crate::AppState;
+
 pub struct InputPlugin;
 
 #[derive(Event)]
 pub enum InputEvent {
     Click,
-    Restart,
 }
 
 impl Plugin for InputPlugin {
@@ -27,8 +28,9 @@ fn input(
     }
 }
 
-fn reset(key: Res<ButtonInput<KeyCode>>, mut writer: EventWriter<InputEvent>) {
+fn reset(key: Res<ButtonInput<KeyCode>>, mut next_state: ResMut<NextState<AppState>>) {
     if key.just_pressed(KeyCode::Escape) {
-        writer.send(InputEvent::Restart);
+        println!("Resetting");
+        next_state.set(AppState::Idle);
     }
 }
