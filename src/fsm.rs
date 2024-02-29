@@ -1,7 +1,7 @@
 use bevy::{prelude::*, time::Stopwatch};
 use rand::Rng;
 
-use crate::{input::InputEvent, reaction::ReactionState, ui::score::Scores, AppState};
+use crate::{input::InputEvent, reaction::AppState, ui::score::Scores};
 
 pub struct StateMachinePlugin;
 
@@ -37,82 +37,72 @@ impl TimeKeeper {
 
 fn app_logic(
     mut inputs: EventReader<InputEvent>,
-    app: ResMut<State<AppState>>,
-    mut next_app: ResMut<NextState<AppState>>,
-    reaction: ResMut<State<ReactionState>>,
-    mut next_reaction: ResMut<NextState<ReactionState>>,
+    // app: ResMut<State<AppState>>,
+    // mut next_app: ResMut<NextState<AppState>>,
+    state: ResMut<State<AppState>>,
+    mut next_state: ResMut<NextState<AppState>>,
     mut timers: ResMut<TimeKeeper>,
     mut scores: ResMut<Scores>,
     time: Res<Time>,
 ) {
-    // Start the app
-    match app.get() {
-        AppState::Start => {
-            // Click to start playing
+    match state.get() {
+        AppState::Idle => {
+            // Click to restart the game
             if let Some(InputEvent::Click) = inputs.read().last() {
-                next_app.set(AppState::Playing);
-                next_reaction.set(ReactionState::Countdown);
+                next_state.set(AppState::Countdown);
             }
         }
-        AppState::Playing => match reaction.get() {
-            ReactionState::Idle => {}
-            // while playing
-            ReactionState::Countdown => {
-                // when countdown finished, it will either restart or transition to listening to
-                // clicks
-                if timers.countdown.finished() {
-                    match rand::thread_rng().gen_bool(0.5) {
-                        true => {
-                            // start a fresh timer for reaction calculation
-                            timers.reaction.reset();
-                            next_reaction.set(ReactionState::Listening)
-                        },
-                        false => {
-                            timers.countdown.reset();
-                            next_reaction.set(ReactionState::Countdown)
-                        }
+        // while playing
+        AppState::Countdown => {
+            // when countdown finished, it will either restart or transition to listening to
+            // clicks
+            if timers.countdown.finished() {
+                match rand::thread_rng().gen_bool(0.5) {
+                    true => {
+                        // start a fresh timer for reaction calculation
+                        timers.reaction.reset();
+                        next_state.set(AppState::Listening)
                     }
-                // else if you click to soon, it will transition to misinput
-                } else if let Some(InputEvent::Click) = inputs.read().last() {
-                    next_reaction.set(ReactionState::Misinput);
+                    false => {
+                        timers.countdown.reset();
+                        next_state.set(AppState::Countdown)
+                    }
                 }
+            // else if you click to soon, it will transition to misinput
+            } else if let Some(InputEvent::Click) = inputs.read().last() {
+                next_state.set(AppState::Misinput);
             }
-            // in case of misinput, click to go back to countdown
-            ReactionState::Misinput => {
-                if let Some(InputEvent::Click) = inputs.read().last() {
-                    next_reaction.set(ReactionState::Countdown)
-                }
-            }
-            ReactionState::Listening => {
-                // Start tracking reaction time
-                timers.reaction.tick(time.delta());
-                // When clicked, add reaction time to scores
-                if let Some(InputEvent::Click) = inputs.read().last() {
-                    scores.add(timers.reaction.elapsed());
-                }
-
-                // When the reaction Vec is filled, show the results
-                if scores.counter == scores.size {
-                    next_reaction.set(ReactionState::Restart);
-                }
-
-                // wait the transition time to go back to countdown
-                if timers.transition.tick(time.delta()).finished() {
-                    timers.transition.reset();
-                    next_reaction.set(ReactionState::Countdown);
-                }
-            }
-            ReactionState::Restart => {
-                if let Some(InputEvent::Click) = inputs.read().last() {
-                    scores.reset();
-                    timers.reset();
-                    next_reaction.set(ReactionState::Idle);
-                }
-            }
-        },
-        AppState::Result => {
+        }
+        // in case of misinput, click to go back to countdown
+        AppState::Misinput => {
             if let Some(InputEvent::Click) = inputs.read().last() {
-                next_app.set(AppState::Start);
+                next_state.set(AppState::Countdown)
+            }
+        }
+        AppState::Listening => {
+            // Start tracking reaction time
+            timers.reaction.tick(time.delta());
+            // When clicked, add reaction time to scores
+            if let Some(InputEvent::Click) = inputs.read().last() {
+                scores.add(timers.reaction.elapsed());
+            }
+
+            // When the reaction Vec is filled, show the results
+            if scores.counter == scores.size {
+                next_state.set(AppState::Results);
+            }
+
+            // wait the transition time to go back to countdown
+            if timers.transition.tick(time.delta()).finished() {
+                timers.transition.reset();
+                next_state.set(AppState::Countdown);
+            }
+        }
+        AppState::Results => {
+            if let Some(InputEvent::Click) = inputs.read().last() {
+                scores.reset();
+                timers.reset();
+                next_state.set(AppState::Idle);
             }
         }
     }

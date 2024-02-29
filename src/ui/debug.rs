@@ -1,7 +1,10 @@
 use bevy::prelude::*;
-use bevy_egui::{egui::{self, Align2}, EguiContexts, EguiPlugin};
+use bevy_egui::{
+    egui::{self, Align2},
+    EguiContexts, EguiPlugin,
+};
 
-use crate::{reaction::ReactionState, AppState};
+use crate::reaction::AppState;
 use rand::Rng;
 
 use super::score::Scores;
@@ -54,80 +57,54 @@ pub fn show_reactions(mut contexts: EguiContexts, mut times: ResMut<Scores>) {
 
 fn change_state(
     mut contexts: EguiContexts,
-    mut next_app: ResMut<NextState<AppState>>,
-    curr_app: Res<State<AppState>>,
-    mut next_reaction: ResMut<NextState<ReactionState>>,
-    curr_reaction: Res<State<ReactionState>>,
+    mut next_reaction: ResMut<NextState<AppState>>,
+    curr_reaction: Res<State<AppState>>,
 ) {
     egui::Window::new("Debug")
         .anchor(Align2::LEFT_BOTTOM, (0., -10.))
         .default_open(true)
         .show(contexts.ctx_mut(), |ui| {
-            ui.label("App States");
-            ui.horizontal(|ui| {
-                if ui
-                    .selectable_label(*curr_app.get() == AppState::Start, "Start")
-                    .clicked()
-                {
-                    next_app.set(AppState::Start);
-                }
-
-                if ui
-                    .selectable_label(*curr_app.get() == AppState::Playing, "Playing")
-                    .clicked()
-                {
-                    next_app.set(AppState::Playing);
-                }
-
-                if ui
-                    .selectable_label(*curr_app.get() == AppState::Result, "Result")
-                    .clicked()
-                {
-                    next_app.set(AppState::Result);
-                }
-            });
-
             ui.label("Reaction State: ");
             ui.vertical(|ui| {
                 if ui
-                    .selectable_label(*curr_reaction.get() == ReactionState::Idle, "Idle")
+                    .selectable_label(*curr_reaction.get() == AppState::Idle, "Idle")
                     .clicked()
                 {
-                    next_reaction.set(ReactionState::Idle);
+                    next_reaction.set(AppState::Idle);
                 }
 
                 if ui
                     .selectable_label(
-                        *curr_reaction.get() == ReactionState::Countdown,
+                        *curr_reaction.get() == AppState::Countdown,
                         "Countdown",
                     )
                     .clicked()
                 {
-                    next_reaction.set(ReactionState::Countdown);
+                    next_reaction.set(AppState::Countdown);
                 }
 
                 if ui
-                    .selectable_label(*curr_reaction.get() == ReactionState::Misinput, "Misinput")
+                    .selectable_label(*curr_reaction.get() == AppState::Misinput, "Misinput")
                     .clicked()
                 {
-                    next_reaction.set(ReactionState::Misinput);
+                    next_reaction.set(AppState::Misinput);
                 }
 
                 if ui
                     .selectable_label(
-                        *curr_reaction.get() == ReactionState::Listening,
+                        *curr_reaction.get() == AppState::Listening,
                         "Listening",
                     )
                     .clicked()
                 {
-                    next_reaction.set(ReactionState::Listening);
+                    next_reaction.set(AppState::Listening);
                 }
 
                 if ui
-                    .selectable_label(*curr_reaction.get() == ReactionState::Restart, "Restart")
+                    .selectable_label(*curr_reaction.get() == AppState::Results, "Restart")
                     .clicked()
                 {
-                    next_reaction.set(ReactionState::Restart);
+                    next_reaction.set(AppState::Results);
                 }
             })
         });

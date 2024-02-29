@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::reaction::ReactionState;
+use crate::reaction::AppState;
 
 pub struct InstructionsPlugin;
 
@@ -9,11 +9,11 @@ impl Plugin for InstructionsPlugin {
         app.add_systems(Startup, setup_instructions_ui)
             .add_systems(
                 Update,
-                show_instructions.run_if(in_state(ReactionState::Idle)),
+                show_instructions.run_if(in_state(AppState::Idle)),
             )
             .add_systems(
                 Update,
-                hide_instructions.run_if(not(in_state(ReactionState::Idle))),
+                hide_instructions.run_if(not(in_state(AppState::Idle))),
             );
     }
 }

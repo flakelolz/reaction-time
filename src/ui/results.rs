@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::reaction::ReactionState;
+use crate::reaction::AppState;
 
 use super::score::Scores;
 
@@ -11,11 +11,11 @@ impl Plugin for RestartPlugin {
         app.add_systems(Startup, setup_restart_ui)
             .add_systems(
                 Update,
-                (show_restart_ui, show_results).run_if(in_state(ReactionState::Restart)),
+                (show_restart_ui, show_results).run_if(in_state(AppState::Results)),
             )
             .add_systems(
                 Update,
-                hide_restart_ui.run_if(not(in_state(ReactionState::Restart))),
+                hide_restart_ui.run_if(not(in_state(AppState::Results))),
             );
     }
 }

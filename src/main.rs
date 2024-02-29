@@ -15,7 +15,6 @@ fn main() {
             }),
             ..Default::default()
         }))
-        .init_state::<AppState>()
         .add_plugins(ui::debug::DebugPlugin)
         .add_plugins(reaction::ReactionPlugin)
         .add_plugins(input::InputPlugin)
@@ -24,20 +23,11 @@ fn main() {
         .add_plugins(ui::countdown::CountdownPlugin)
         .add_plugins(ui::listening::ListeningPlugin)
         .add_plugins(ui::misinput::MisinputPlugin)
-        .add_plugins(ui::restart::RestartPlugin)
+        .add_plugins(ui::results::RestartPlugin)
         .add_plugins(fsm::StateMachinePlugin)
         .add_systems(Startup, setup)
         .run();
 }
-
-#[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
-enum AppState {
-    #[default]
-    Start,
-    Playing,
-    Result,
-}
-
 
 fn setup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());

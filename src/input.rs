@@ -1,8 +1,5 @@
 use bevy::prelude::*;
 
-use crate::ui::score::Scores;
-use crate::AppState;
-
 pub struct InputPlugin;
 
 #[derive(Event)]
@@ -31,12 +28,9 @@ fn input(
 
 fn reset(
     key: Res<ButtonInput<KeyCode>>,
-    mut scores: ResMut<Scores>,
-    states: Res<State<AppState>>,
     mut writer: EventWriter<InputEvent>,
 ) {
-    if key.just_pressed(KeyCode::KeyR) && states.as_ref() != &AppState::Playing {
+    if key.just_pressed(KeyCode::Escape) {
         writer.send(InputEvent::Restart);
-        scores.reset();
     }
 }

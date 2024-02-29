@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{fsm::TimeKeeper, reaction::ReactionState};
+use crate::{fsm::TimeKeeper, reaction::AppState};
 
 pub struct CountdownPlugin;
 
@@ -10,11 +10,11 @@ impl Plugin for CountdownPlugin {
             .add_systems(Startup, setup_countdown_ui)
             .add_systems(
                 Update,
-                show_countdown.run_if(in_state(ReactionState::Countdown)),
+                show_countdown.run_if(in_state(AppState::Countdown)),
             )
             .add_systems(
                 Update,
-                hide_countdown.run_if(not(in_state(ReactionState::Countdown))),
+                hide_countdown.run_if(not(in_state(AppState::Countdown))),
             );
     }
 }

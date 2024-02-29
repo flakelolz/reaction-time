@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::reaction::ReactionState;
+use crate::reaction::AppState;
 
 pub struct MisinputPlugin;
 
@@ -9,11 +9,11 @@ impl Plugin for MisinputPlugin {
         app.add_systems(Startup, setup_misinput_ui)
             .add_systems(
                 Update,
-                show_misinput_ui.run_if(in_state(ReactionState::Misinput)),
+                show_misinput_ui.run_if(in_state(AppState::Misinput)),
             )
             .add_systems(
                 Update,
-                hide_misinput_ui.run_if(not(in_state(ReactionState::Misinput))),
+                hide_misinput_ui.run_if(not(in_state(AppState::Misinput))),
             );
     }
 }

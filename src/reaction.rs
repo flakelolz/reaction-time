@@ -4,7 +4,7 @@ pub struct ReactionPlugin;
 
 impl Plugin for ReactionPlugin {
     fn build(&self, app: &mut App) {
-        app.init_state::<ReactionState>()
+        app.init_state::<AppState>()
             .add_systems(Startup, setup_colors)
             .add_systems(Update, square_color)
             .add_systems(Update, square_size);
@@ -13,13 +13,13 @@ impl Plugin for ReactionPlugin {
 
 #[allow(unused)]
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
-pub enum ReactionState {
+pub enum AppState {
     #[default]
     Idle,
     Countdown,
     Misinput,
     Listening,
-    Restart,
+    Results,
 }
 
 #[derive(Component)]
@@ -42,16 +42,16 @@ fn setup_colors(mut commands: Commands, window: Query<&Window>) {
 
 fn square_color(
     mut square: Query<&mut Sprite, With<ReactionColor>>,
-    state: Res<State<ReactionState>>,
+    state: Res<State<AppState>>,
 ) {
     let state = state.as_ref().get();
     for mut sprite in &mut square {
         sprite.color = match state {
-            ReactionState::Idle => Color::rgb_u8(43, 135, 209),
-            ReactionState::Countdown => Color::rgb_u8(206, 38, 54),
-            ReactionState::Misinput => Color::rgb_u8(43, 135, 209),
-            ReactionState::Listening => Color::rgb_u8(75, 219, 106),
-            ReactionState::Restart => Color::BLACK,
+            AppState::Idle => Color::rgb_u8(43, 135, 209),
+            AppState::Countdown => Color::rgb_u8(206, 38, 54),
+            AppState::Misinput => Color::rgb_u8(43, 135, 209),
+            AppState::Listening => Color::rgb_u8(75, 219, 106),
+            AppState::Results => Color::BLACK,
         }
     }
 }

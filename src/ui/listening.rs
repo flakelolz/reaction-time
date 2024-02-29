@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::reaction::ReactionState;
+use crate::reaction::AppState;
 
 pub struct ListeningPlugin;
 
@@ -9,11 +9,11 @@ impl Plugin for ListeningPlugin {
         app.add_systems(Startup, setup_listening_ui)
             .add_systems(
                 Update,
-                show_listening_ui.run_if(in_state(ReactionState::Listening)),
+                show_listening_ui.run_if(in_state(AppState::Listening)),
             )
             .add_systems(
                 Update,
-                hide_listening_ui.run_if(not(in_state(ReactionState::Listening))),
+                hide_listening_ui.run_if(not(in_state(AppState::Listening))),
             );
     }
 }
@@ -55,6 +55,7 @@ fn show_listening_ui(mut query: Query<&mut Style, With<ListeningUI>>) {
         style.display = Display::Flex;
     }
 }
+
 fn hide_listening_ui(mut query: Query<&mut Style, With<ListeningUI>>) {
     for mut style in &mut query {
         style.display = Display::None;
