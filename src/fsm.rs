@@ -47,7 +47,6 @@ fn app_logic(
 ) {
     match state.get() {
         AppState::Idle => {
-
             scores.reset();
             timers.reset();
             // Click to restart the game

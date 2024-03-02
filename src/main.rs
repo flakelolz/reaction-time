@@ -10,17 +10,14 @@ fn main() {
     let mut app = App::new();
 
     // Add everything to the app
-    app.add_plugins(
-        DefaultPlugins
-            .set(WindowPlugin {
-                primary_window: Some(Window {
-                    title: "Reaction Test".to_string(),
-                    resolution: WindowResolution::new(800.0, 600.0).with_scale_factor_override(1.0),
-                    ..default()
-                }),
-                ..default()
-            }),
-    )
+    app.add_plugins(DefaultPlugins.set(WindowPlugin {
+        primary_window: Some(Window {
+            title: "Reaction Test".to_string(),
+            resolution: WindowResolution::new(800.0, 600.0).with_scale_factor_override(1.0),
+            ..default()
+        }),
+        ..default()
+    }))
     .init_state::<AppState>()
     .add_plugins(reaction::ReactionPlugin)
     .add_plugins(input::InputPlugin)

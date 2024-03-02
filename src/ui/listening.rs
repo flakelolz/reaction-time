@@ -61,4 +61,3 @@ fn hide_listening_ui(mut query: Query<&mut Style, With<ListeningUI>>) {
         style.display = Display::None;
     }
 }
-
