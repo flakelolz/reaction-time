@@ -24,7 +24,7 @@ fn main() {
     .init_state::<AppState>()
     .add_plugins(reaction::ReactionPlugin)
     .add_plugins(input::InputPlugin)
-    .add_plugins(ui::score::InterfacePlugin)
+    .add_plugins(ui::score::ScoresPlugin)
     .add_plugins(ui::instructions::InstructionsPlugin)
     .add_plugins(ui::countdown::CountdownPlugin)
     .add_plugins(ui::listening::ListeningPlugin)
