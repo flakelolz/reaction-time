@@ -1,7 +1,7 @@
 use bevy::{prelude::*, time::Stopwatch};
 use rand::Rng;
 
-use crate::{input::InputEvent, ui::score::Scores, AppState};
+use crate::{ui::score::Scores, AppState};
 
 pub struct StateMachinePlugin;
 
@@ -36,13 +36,11 @@ impl TimeKeeper {
 }
 
 fn app_logic(
-    mut inputs: EventReader<InputEvent>,
-    // app: ResMut<State<AppState>>,
-    // mut next_app: ResMut<NextState<AppState>>,
     state: ResMut<State<AppState>>,
     mut next_state: ResMut<NextState<AppState>>,
     mut timers: ResMut<TimeKeeper>,
     mut scores: ResMut<Scores>,
+    input: Res<ButtonInput<MouseButton>>,
     time: Res<Time>,
 ) {
     match state.get() {
@@ -50,7 +48,7 @@ fn app_logic(
             scores.reset();
             timers.reset();
             // Click to restart the game
-            if let Some(InputEvent::Click) = inputs.read().last() {
+            if input.just_pressed(MouseButton::Left) {
                 next_state.set(AppState::Countdown);
             }
         }
@@ -71,13 +69,13 @@ fn app_logic(
                     }
                 }
             // else if you click to soon, it will transition to misinput
-            } else if let Some(InputEvent::Click) = inputs.read().last() {
+            } else if input.just_pressed(MouseButton::Left) {
                 next_state.set(AppState::Misinput);
             }
         }
         // in case of misinput, click to go back to countdown
         AppState::Misinput => {
-            if let Some(InputEvent::Click) = inputs.read().last() {
+            if input.just_pressed(MouseButton::Left) {
                 next_state.set(AppState::Countdown)
             }
         }
@@ -86,7 +84,7 @@ fn app_logic(
             timers.reaction.tick(time.delta());
 
             // When clicked, add reaction time to scores
-            if let Some(InputEvent::Click) = inputs.read().last() {
+            if input.just_pressed(MouseButton::Left) {
                 scores.add(timers.reaction.elapsed());
 
                 // Show the current reaction time
@@ -94,7 +92,7 @@ fn app_logic(
             }
         }
         AppState::Result => {
-            if let Some(InputEvent::Click) = inputs.read().last() {
+            if input.just_pressed(MouseButton::Left) {
                 // if the reaction Vec is filled, show the finished state
                 if scores.counter == scores.size {
                     next_state.set(AppState::Finished);
@@ -104,7 +102,7 @@ fn app_logic(
             }
         }
         AppState::Finished => {
-            if let Some(InputEvent::Click) = inputs.read().last() {
+            if input.just_pressed(MouseButton::Left) {
                 next_state.set(AppState::Idle);
             }
         }
