@@ -7,11 +7,12 @@ pub struct CountdownPlugin;
 impl Plugin for CountdownPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_countdown_ui)
-            .add_systems(Update, show_countdown.run_if(in_state(AppState::Countdown)))
+            .add_systems(OnEnter(AppState::Countdown), show_countdown)
             .add_systems(
                 Update,
-                hide_countdown.run_if(not(in_state(AppState::Countdown))),
-            );
+                update_countdown.run_if(in_state(AppState::Countdown)),
+            )
+            .add_systems(OnExit(AppState::Countdown), hide_countdown);
     }
 }
 
@@ -19,17 +20,20 @@ impl Plugin for CountdownPlugin {
 struct CountdownUI;
 
 fn setup_countdown_ui(mut commands: Commands) {
-    let container = NodeBundle {
-        style: Style {
-            display: Display::Flex,
-            align_items: AlignItems::Center,
-            justify_content: JustifyContent::Center,
-            width: Val::Percent(100.),
-            height: Val::Percent(100.),
+    let container = (
+        NodeBundle {
+            style: Style {
+                display: Display::None,
+                align_items: AlignItems::Center,
+                justify_content: JustifyContent::Center,
+                width: Val::Percent(100.),
+                height: Val::Percent(100.),
+                ..default()
+            },
             ..default()
         },
-        ..default()
-    };
+        CountdownUI,
+    );
 
     let counter = (
         TextBundle::from_section(
@@ -48,15 +52,19 @@ fn setup_countdown_ui(mut commands: Commands) {
 }
 
 // Shows and ticks the countdown while on ReactionState::Countdown state
-fn show_countdown(
-    mut text_query: Query<(&mut Text, &mut Style), With<CountdownUI>>,
+fn show_countdown(mut text_query: Query<&mut Style, With<CountdownUI>>) {
+    for mut style in &mut text_query {
+        style.display = Display::Flex;
+    }
+}
+
+fn update_countdown(
+    mut text: Query<&mut Text, With<CountdownUI>>,
     mut timer: ResMut<TimeKeeper>,
     time: Res<Time>,
 ) {
     timer.countdown.tick(time.delta());
-
-    for (mut text, mut style) in &mut text_query {
-        style.display = Display::Flex;
+    for mut text in &mut text {
         text.sections[0].value = format!("{:.1}", timer.countdown.remaining_secs());
     }
 }

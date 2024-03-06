@@ -7,14 +7,8 @@ pub struct ListeningPlugin;
 impl Plugin for ListeningPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_listening_ui)
-            .add_systems(
-                Update,
-                show_listening_ui.run_if(in_state(AppState::Listening)),
-            )
-            .add_systems(
-                Update,
-                hide_listening_ui.run_if(not(in_state(AppState::Listening))),
-            );
+            .add_systems(OnEnter(AppState::Listening), show_listening_ui)
+            .add_systems(OnExit(AppState::Listening), hide_listening_ui);
     }
 }
 
@@ -22,17 +16,20 @@ impl Plugin for ListeningPlugin {
 struct ListeningUI;
 
 fn setup_listening_ui(mut commands: Commands) {
-    let container = NodeBundle {
-        style: Style {
-            display: Display::Flex,
-            justify_content: JustifyContent::Center,
-            align_items: AlignItems::Center,
-            width: Val::Percent(100.),
-            height: Val::Percent(100.),
+    let container = (
+        NodeBundle {
+            style: Style {
+                display: Display::None,
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                width: Val::Percent(100.),
+                height: Val::Percent(100.),
+                ..default()
+            },
             ..default()
         },
-        ..default()
-    };
+        ListeningUI,
+    );
 
     let click = (
         TextBundle::from_section(

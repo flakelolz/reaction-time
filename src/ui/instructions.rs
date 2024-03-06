@@ -7,11 +7,8 @@ pub struct InstructionsPlugin;
 impl Plugin for InstructionsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_instructions_ui)
-            .add_systems(Update, show_instructions.run_if(in_state(AppState::Idle)))
-            .add_systems(
-                Update,
-                hide_instructions.run_if(not(in_state(AppState::Idle))),
-            );
+            .add_systems(OnEnter(AppState::Idle), show_instructions)
+            .add_systems(OnExit(AppState::Idle), hide_instructions);
     }
 }
 
@@ -19,18 +16,21 @@ impl Plugin for InstructionsPlugin {
 struct InstructionsUI;
 
 fn setup_instructions_ui(mut commands: Commands) {
-    let container = NodeBundle {
-        style: Style {
-            display: Display::Flex,
-            flex_direction: FlexDirection::Column,
-            justify_content: JustifyContent::Center,
-            align_items: AlignItems::Center,
-            width: Val::Percent(100.),
-            height: Val::Percent(100.),
+    let container = (
+        NodeBundle {
+            style: Style {
+                display: Display::None,
+                flex_direction: FlexDirection::Column,
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                width: Val::Percent(100.),
+                height: Val::Percent(100.),
+                ..default()
+            },
             ..default()
         },
-        ..default()
-    };
+        InstructionsUI,
+    );
 
     let instructions = (
         TextBundle::from_section(

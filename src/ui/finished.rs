@@ -9,14 +9,8 @@ pub struct FinishedPlugin;
 impl Plugin for FinishedPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_restart_ui)
-            .add_systems(
-                Update,
-                (show_restart_ui, show_results).run_if(in_state(AppState::Finished)),
-            )
-            .add_systems(
-                Update,
-                hide_restart_ui.run_if(not(in_state(AppState::Finished))),
-            );
+            .add_systems(OnEnter(AppState::Finished), (show_restart_ui, show_results))
+            .add_systems(OnExit(AppState::Finished), hide_restart_ui);
     }
 }
 
@@ -24,21 +18,24 @@ impl Plugin for FinishedPlugin {
 struct RestartUI;
 
 #[derive(Component)]
-struct ResultUI;
+struct ResultsTable;
 
 fn setup_restart_ui(mut commands: Commands) {
-    let container = NodeBundle {
-        style: Style {
-            display: Display::Flex,
-            flex_direction: FlexDirection::Column,
-            justify_content: JustifyContent::Center,
-            align_items: AlignItems::Center,
-            width: Val::Percent(100.),
-            height: Val::Percent(100.),
+    let container = (
+        NodeBundle {
+            style: Style {
+                display: Display::None,
+                flex_direction: FlexDirection::Column,
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                width: Val::Percent(100.),
+                height: Val::Percent(100.),
+                ..default()
+            },
             ..default()
         },
-        ..default()
-    };
+        RestartUI,
+    );
 
     let results = (
         TextBundle::from_section(
@@ -49,7 +46,7 @@ fn setup_restart_ui(mut commands: Commands) {
                 ..default()
             },
         ),
-        ResultUI,
+        ResultsTable,
         RestartUI,
     );
 
@@ -86,7 +83,7 @@ fn setup_restart_ui(mut commands: Commands) {
         .push_children(&[results, spacer, click]);
 }
 
-fn show_results(mut query: Query<&mut Text, With<ResultUI>>, scores: Res<Scores>) {
+fn show_results(mut query: Query<&mut Text, With<ResultsTable>>, scores: Res<Scores>) {
     for mut text in &mut query {
         text.sections[0].value = format!("{}", scores.as_ref());
     }
